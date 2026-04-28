@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Inventory</title>
+    <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+<div class="card">
+    <h2>Inventory Items</h2>
+
+    <input id="itemCode" placeholder="Item Code"/>
+    <input id="itemName" placeholder="Item Name"/>
+    <input id="qty" type="number" placeholder="Quantity"/>
+    <input id="threshold" type="number" placeholder="Low Stock Threshold"/>
+    <select id="category">
+        <option value="CONSUMABLE">Consumable</option>
+        <option value="NON_CONSUMABLE">Non-consumable</option>
+    </select>
+    <button onclick="addItem()">Add Item</button>
+
+    <table border="1" width="100%" id="table">
+        <thead>
+        <tr>
+            <th>ID</th><th>Code</th><th>Name</th><th>Stock</th><th>Category</th><th>Action</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

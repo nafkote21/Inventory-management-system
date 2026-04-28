@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - ASTU IMS</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="login-container">
+        <!-- Features Side (Desktop Only) -->
+        <div class="login-side-features">
+            <div class="features-content">
+                <h1>Streamline Your <br>University Assets</h1>
+                <p>A centralized, efficient, and transparent Inventory Management System designed specifically for ASTU.</p>
+                
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div>
+                            <strong>Role-Based Security</strong>
+                            <div style="font-size: 0.85rem; opacity: 0.8;">Secure access for Admin, Dept Head, Storekeeper, and Instructors.</div>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                        <div>
+                            <strong>Real-time Tracking</strong>
+                            <div style="font-size: 0.85rem; opacity: 0.8;">Instant visibility of stock levels and asset locations.</div>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"><i class="fas fa-check-double"></i></div>
+                        <div>
+                            <strong>Smart Approvals</strong>
+                            <div style="font-size: 0.85rem; opacity: 0.8;">Streamlined multi-stage request and approval workflow.</div>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"><i class="fas fa-bell"></i></div>
+                        <div>
+                            <strong>Auto Notifications</strong>
+                            <div style="font-size: 0.85rem; opacity: 0.8;">Never miss a low stock alert or a pending request.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Side -->
+        <div class="login-side-form">
+            <div class="login-card">
+                <img src="images/logo.png" alt="ASTU IMS Logo" class="login-logo">
+                <h2 style="color: var(--primary-color); margin-bottom: 0.5rem;">Welcome Back</h2>
+                <p style="margin-bottom: 2rem; color: #666; font-size: 0.9rem;">Sign in to manage your inventory</p>
+                
+                <form id="loginForm" action="/api/auth/login" method="POST">
+                    <div class="form-group">
+                        <label for="username">Email Address</label>
+                        <input type="email" id="username" name="username" placeholder="name@astu.edu.et" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn-primary" style="margin-top: 1rem;">Sign In</button>
+                </form>
+                
+                <div id="error-msg" style="color: #ff4d4d; margin-top: 1rem; display: none; font-size: 0.9rem; background: #fff5f5; padding: 0.8rem; border-radius: 8px;">
+                    <i class="fas fa-exclamation-circle"></i> Invalid email or password.
+                </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('error')) {
+            document.getElementById('error-msg').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

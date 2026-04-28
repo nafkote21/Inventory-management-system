@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+<div class="card">
+    <h2>Dashboard</h2>
+    <p id="welcome"></p>
+    <a href="inventory.html">Manage Inventory</a><br><br>
+    <button onclick="logout()">Logout</button>
+</div>
+
+<script>
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    document.getElementById("welcome").innerText =
+        "Welcome " + (user.fullName || "") + " (" + (user.role || "") + ")";
+
+    function logout() {
+        localStorage.removeItem("user");
+        window.location.href = "login.html";
+    }
+</script>
+</body>
+</html>
