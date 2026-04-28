@@ -21,10 +21,11 @@ function setupFormListeners() {
             if (submitBtn) submitBtn.disabled = true;
 
             const payload = {
-                itemId: document.getElementById('request-item-id').value,
-                quantity: document.getElementById('request-quantity').value,
+                itemId: parseInt(document.getElementById('request-item-id').value),
+                quantity: parseInt(document.getElementById('request-quantity').value),
                 reason: document.getElementById('request-reason').value
             };
+            console.log("Payload:", payload);
             
             try {
                 const res = await fetch('/api/requests', {
@@ -32,6 +33,7 @@ function setupFormListeners() {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
+                console.log("Response status:", res.status);
                 if (res.ok) {
                     alert("Request Submitted!");
                     closeModal('modal-request');

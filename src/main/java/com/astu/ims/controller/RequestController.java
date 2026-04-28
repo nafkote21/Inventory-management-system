@@ -22,12 +22,20 @@ public class RequestController {
         return requestService.getAllRequests();
     }
 
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(RequestController.class);
+
     @PostMapping
     public Request create(@RequestBody Map<String, Object> payload, Authentication auth) {
-        Long itemId = Long.valueOf(payload.get("itemId").toString());
-        int quantity = Integer.parseInt(payload.get("quantity").toString());
-        String reason = payload.getOrDefault("reason", "").toString();
-        return requestService.createRequest(itemId, quantity, reason, auth.getName());
+        logger.info("Creating request: payload={}, user={}", payload, auth != null ? auth.getName() : "null");
+        try {
+            Long itemId = Long.valueOf(payload.get("itemId").toString());
+            int quantity = Integer.parseInt(payload.get("quantity").toString());
+            String reason = payload.getOrDefault("reason", "").toString();
+            return requestService.createRequest(itemId, quantity, reason, auth.getName());
+        } catch (Exception e) {
+            logger.error("Error creating request: ", e);
+            throw e;
+        }
     }
 
     @PutMapping("/{id}/status")
