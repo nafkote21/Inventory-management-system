@@ -4,11 +4,52 @@ let currentUser = null;
 document.addEventListener('DOMContentLoaded', async () => {
     await loadUser();
     if (currentUser) {
+        setupFormListeners();
         initDashboard();
     } else {
         window.location.href = '/login.html';
     }
 });
+
+function setupFormListeners() {
+    const requestForm = document.getElementById('requestForm');
+    if (requestForm) {
+        requestForm.onsubmit = async (e) => {
+            e.preventDefault();
+            console.log("Form submitted");
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            if (submitBtn) submitBtn.disabled = true;
+
+            const payload = {
+                itemId: document.getElementById('request-item-id').value,
+                quantity: document.getElementById('request-quantity').value,
+                reason: document.getElementById('request-reason').value
+            };
+            
+            try {
+                const res = await fetch('/api/requests', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    alert("Request Submitted!");
+                    closeModal('modal-request');
+                    initDashboard();
+                    requestForm.reset();
+                } else {
+                    const err = await res.json();
+                    alert("Error: " + (err.message || "Failed to submit request"));
+                }
+            } catch (err) {
+                console.error("Submission error", err);
+                alert("Failed to connect to server.");
+            } finally {
+                if (submitBtn) submitBtn.disabled = false;
+            }
+        };
+    }
+}
 
 async function loadUser() {
     try {
@@ -41,7 +82,11 @@ function showSection(sectionId) {
     document.getElementById('section-title').innerText = sectionId.charAt(0).toUpperCase() + sectionId.slice(1);
     
     document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-    if (event && event.currentTarget) event.currentTarget.classList.add('active');
+    
+    // Fix: event might not be available globally in all browsers
+    if (typeof event !== 'undefined' && event && event.currentTarget) {
+        event.currentTarget.classList.add('active');
+    }
 
     if (sectionId === 'inventory') loadInventory();
     if (sectionId === 'users') loadUsers();
@@ -51,9 +96,13 @@ function showSection(sectionId) {
 }
 
 async function initDashboard() {
-    renderRoleWidgets();
-    loadStats();
-    loadRequests();
+    try {
+        await renderRoleWidgets();
+        await loadStats();
+        await loadRequests();
+    } catch (err) {
+        console.error("Dashboard init failed", err);
+    }
 }
 
 async function renderRoleWidgets() {
@@ -334,24 +383,7 @@ function openRequestModal() {
         });
 }
 
-document.getElementById('requestForm').onsubmit = async (e) => {
-    e.preventDefault();
-    const payload = {
-        itemId: document.getElementById('request-item-id').value,
-        quantity: document.getElementById('request-quantity').value,
-        reason: document.getElementById('request-reason').value
-    };
-    const res = await fetch('/api/requests', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-    });
-    if (res.ok) {
-        alert("Request Submitted!");
-        closeModal('modal-request');
-        initDashboard();
-    }
-};
+// Removed redundant onsubmit assignment, handled in setupFormListeners()
 
 async function loadUsers() {
     const res = await fetch('/api/users');

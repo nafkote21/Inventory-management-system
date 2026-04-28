@@ -15,6 +15,8 @@
             <button id="menu-toggle"><i class="fas fa-bars"></i></button>
         </div>
 
+        <div id="sidebar-overlay"></div>
+
         <aside class="sidebar" id="sidebar">
             <h2>ASTU IMS</h2>
             <ul class="nav-links">
@@ -173,7 +175,7 @@
                 </div>
                 <div class="form-group">
                     <label>Quantity</label>
-                    <input type="number" id="request-quantity" required min="1">
+                    <input type="number" id="request-quantity" required min="1" style="width:100%; padding:0.8rem; border-radius:6px; border:1px solid #ddd;">
                 </div>
                 <div class="form-group">
                     <label>Reason</label>
@@ -204,18 +206,27 @@
         // Mobile Menu Toggle
         const menuToggle = document.getElementById('menu-toggle');
         const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
         
+        function toggleMenu() {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : 'auto';
+        }
+
         if (menuToggle) {
-            menuToggle.addEventListener('click', () => {
-                sidebar.classList.toggle('active');
-            });
+            menuToggle.addEventListener('click', toggleMenu);
+        }
+
+        if (overlay) {
+            overlay.addEventListener('click', toggleMenu);
         }
 
         // Close sidebar when clicking a link on mobile
         document.querySelectorAll('.nav-links a').forEach(link => {
             link.addEventListener('click', () => {
-                if (window.innerWidth <= 900) {
-                    sidebar.classList.remove('active');
+                if (window.innerWidth <= 900 && sidebar.classList.contains('active')) {
+                    toggleMenu();
                 }
             });
         });

@@ -10,17 +10,19 @@ DROP TABLE IF EXISTS items;
 DROP TABLE IF EXISTS departments;
 DROP TABLE IF EXISTS users;
 
+CREATE TABLE departments (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+);
+
 CREATE TABLE users (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-    role VARCHAR(50) NOT NULL
-);
-
-CREATE TABLE departments (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL
+    role VARCHAR(50) NOT NULL,
+    department_id BIGINT,
+    FOREIGN KEY (department_id) REFERENCES departments(id)
 );
 
 CREATE TABLE items (
@@ -28,6 +30,7 @@ CREATE TABLE items (
     name VARCHAR(100) NOT NULL,
     category VARCHAR(50) NOT NULL,
     quantity INT DEFAULT 0,
+    reorder_level INT DEFAULT 0,
     description TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
