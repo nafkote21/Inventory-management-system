@@ -23,7 +23,7 @@ public class ReportService {
     public Map<String, Object> getStockReport() {
         List<Item> items = itemRepository.findAll();
         long totalItems = items.size();
-        long lowStockCount = items.stream().filter(i -> i.getQuantity() <= 5).count();
+        long lowStockCount = items.stream().filter(i -> i.getQuantity() <= i.getReorderLevel()).count();
         
         Map<String, Object> report = new HashMap<>();
         report.put("totalItems", totalItems);
@@ -36,6 +36,11 @@ public class ReportService {
         List<Request> requests = requestRepository.findAll();
         Map<String, Object> report = new HashMap<>();
         report.put("totalRequests", requests.size());
+        
+        // Add status counts
+        Map<String, Long> statusCounts = requests.stream()
+            .collect(java.util.stream.Collectors.groupingBy(Request::getStatus, java.util.stream.Collectors.counting()));
+        report.put("statusCounts", statusCounts);
         report.put("requests", requests);
         return report;
     }

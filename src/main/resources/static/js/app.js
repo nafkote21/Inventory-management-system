@@ -94,6 +94,7 @@ function showSection(sectionId) {
     if (sectionId === 'users') loadUsers();
     if (sectionId === 'all-requests') loadAllRequests();
     if (sectionId === 'notifications') loadNotifications();
+    if (sectionId === 'reports') loadReports();
     if (sectionId === 'overview') initDashboard();
 }
 
@@ -421,4 +422,57 @@ async function loadNotifications() {
             <small style="color:#999;">${new Date(n.createdAt).toLocaleString()}</small>
         </div>
     `).join('') || '<p>No notifications yet.</p>';
+}
+
+async function loadReports() {
+    try {
+        const stockRes = await fetch('/api/reports/stock');
+        const stockData = await stockRes.json();
+        const reqRes = await fetch('/api/reports/requests');
+        const reqData = await reqRes.json();
+        
+        document.getElementById('report-total-items').innerText = stockData.totalItems;
+        document.getElementById('report-low-stock').innerText = stockData.lowStockCount;
+        document.getElementById('report-total-requests').innerText = reqData.totalRequests;
+        
+        const statusList = document.getElementById('report-status-list');
+        statusList.innerHTML = '';
+        for (const [status, count] of Object.entries(reqData.statusCounts)) {
+            const percentage = reqData.totalRequests > 0 ? (count / reqData.totalRequests * 100).toFixed(0) : 0;
+            statusList.innerHTML += `
+                <div style="margin-bottom: 0.8rem;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom: 4px;">
+                        <span>${status.replace(/_/g, ' ')}</span>
+                        <span><b>${count}</b> (${percentage}%)</span>
+                    </div>
+                    <div style="width:100%; background:#eee; height:8px; border-radius:4px; overflow:hidden;">
+                        <div style="width:${percentage}%; background:var(--primary-color); height:100%;"></div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        const healthMsg = document.getElementById('stock-health-msg');
+        if (stockData.lowStockCount === 0) {
+            healthMsg.innerHTML = '<span style="color:green; font-weight:bold;">Excellent</span> - All items are healthy.';
+        } else {
+            healthMsg.innerHTML = `<span style="color:red; font-weight:bold;">Attention</span> - ${stockData.lowStockCount} items are low on stock.`;
+        }
+        
+        const tbody = document.querySelector('#report-inventory-table tbody');
+        tbody.innerHTML = '';
+        stockData.items.forEach(item => {
+            const isLow = item.quantity <= item.reorderLevel;
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${item.name}</td>
+                <td>${item.category}</td>
+                <td>${item.quantity} / ${item.reorderLevel}</td>
+                <td><span class="status-badge ${isLow ? 'status-rejected' : 'status-approved'}">${isLow ? 'LOW' : 'OK'}</span></td>
+            `;
+            tbody.appendChild(tr);
+        });
+    } catch (err) {
+        console.error("Failed to load reports", err);
+    }
 }

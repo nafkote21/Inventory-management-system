@@ -8,13 +8,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="dashboard-wrapper">
-        <!-- Mobile Header -->
-        <div class="mobile-header">
-            <h2>ASTU IMS</h2>
-            <button id="menu-toggle"><i class="fas fa-bars"></i></button>
-        </div>
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+        <h2>ASTU IMS</h2>
+        <button id="menu-toggle"><i class="fas fa-bars"></i></button>
+    </div>
 
+    <div class="dashboard-wrapper">
         <div id="sidebar-overlay"></div>
 
         <aside class="sidebar" id="sidebar">
@@ -158,6 +158,59 @@
                 <h3>My Notifications</h3>
                 <div id="notifications-list" style="margin-top:1rem;">
                     <!-- Data populated by JS -->
+                </div>
+            </section>
+            
+            <!-- Reports Section -->
+            <section id="section-reports" class="content-section" style="display:none;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+                    <h3>Inventory & Request Reports</h3>
+                    <button class="btn-primary" style="width:auto; padding:0.5rem 1rem;" onclick="window.print()">Print Report</button>
+                </div>
+                
+                <div class="card-grid">
+                    <div class="stat-card">
+                        <span class="label">Total Stock Items</span>
+                        <span class="value" id="report-total-items">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="label">Low Stock Alerts</span>
+                        <span class="value" id="report-low-stock" style="color: #ff4d4d;">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="label">Total System Requests</span>
+                        <span class="value" id="report-total-requests">0</span>
+                    </div>
+                </div>
+
+                <div class="widget-grid">
+                    <div class="widget-card">
+                        <h3>Request Status Distribution</h3>
+                        <div id="report-status-list" style="margin-top:1rem;">
+                            <!-- Data populated by JS -->
+                        </div>
+                    </div>
+                    <div class="widget-card">
+                        <h3>Stock Health</h3>
+                        <p id="stock-health-msg">Loading health status...</p>
+                    </div>
+                </div>
+
+                <h3>Full Inventory Summary</h3>
+                <div class="table-container">
+                    <table id="report-inventory-table">
+                        <thead>
+                            <tr>
+                                <th>Item Name</th>
+                                <th>Category</th>
+                                <th>Current Stock</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Data populated by JS -->
+                        </tbody>
+                    </table>
                 </div>
             </section>
 
