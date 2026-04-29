@@ -21,6 +21,10 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+    }
+
     public User createUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
@@ -31,6 +35,9 @@ public class UserService {
         user.setName(userDetails.getName());
         user.setRole(userDetails.getRole());
         user.setDepartment(userDetails.getDepartment());
+        if (userDetails.getEmail() != null && !userDetails.getEmail().isEmpty()) {
+            user.setEmail(userDetails.getEmail());
+        }
         if (userDetails.getPassword() != null && !userDetails.getPassword().isEmpty()) {
             user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
         }
